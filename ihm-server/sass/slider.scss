@@ -1,0 +1,136 @@
+@mixin ombrage {
+    -webkit-box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0, 0, 0, 0);
+    box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0, 0, 0, 0);
+}
+
+.slider {
+    input[type=range] {
+        /* Hides the slider so that custom slider can be made */
+        width: 100%;
+        /* Specific width is required for Firefox. */
+        background: transparent;
+        /* Otherwise white in Chrome */
+
+        &:focus {
+            outline: none;
+
+            /* Safari, Chrome et Opera */
+            &::-webkit-slider-runnable-track {
+                /* La piste utilisée  */
+                background-color: #c91616;
+            }
+            /* Mozilla */
+            &::-moz-range-progress {
+                /* Portion de la piste qui correspond aux valeurs inférieures à la valeur sélectionnée par le curseur  */
+                background-color: #c91616;
+            }
+            /* IE */
+            &::-ms-fill {
+                &-lower {
+                    /* Portion de la piste qui correspond aux valeurs inférieures à la valeur sélectionnée par le curseur  */
+                    background-color: #c91616;
+                }
+
+                &-upper {
+                    /* Portion de la piste qui correspond aux valeurs supérieurs à la valeur sélectionnée par le curseur */
+                    background-color: #c91616;
+                }
+            }
+        }
+
+         /* IE */
+        &::-ms {
+            &-thumb {
+                /* Curseur qui se déplace le long de la piste */
+                background-color: #fdd803;
+                border: 5px solid #fc6c2a;
+                height: 15px;
+                width: 15px;
+                border-radius: 50%;
+                cursor: pointer;
+                box-shadow: 1px 1px 2px #000000, 0px 0px 2px #0d0d0d;
+            }
+
+            &-track {
+                /* La piste utilisée */
+                width: 100%;
+                height: 8.4px;
+                cursor: pointer;
+                background-color: transparent;
+                border-color: transparent;
+                background-color: #fc915f;
+                border: 3px solid #fbe568;
+                border-width: 16px 0;
+                color: transparent;
+            }
+
+            &-fill-lower {
+                /* Portion de la piste qui correspond aux valeurs inférieures à la valeur sélectionnée par le curseur */
+                background-color: #2a6495;
+                border: 0.2px solid #010101;
+                border-radius: 2.6px;
+                box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            }
+
+            &-fill-upper {
+                /* Portion de la piste qui correspond aux valeurs supérieurs à la valeur sélectionnée par le curseur */
+                background-color: #3071a9;
+                border: 0.2px solid #010101;
+                border-radius: 2.6px;
+                box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            }
+        }
+
+        /* SAFARI, CHROME et OPERA */
+        &::-webkit {
+            &-slider-thumb {
+                /* Curseur qui se déplace le long de la piste */
+                background-color: #fdd803;
+                border: 5px solid #fc6c2a;
+                height: 15px;
+                width: 15px;
+                border-radius: 50%;
+                cursor: pointer;
+                box-shadow: 1px 1px 2px #000000, 0px 0px 2px #0d0d0d;
+                margin-top: -8px;
+            }
+
+            &-slider-runnable-track {
+                //* La piste utilisée */
+                width: 100%;
+                height: 2px;
+                background-color: #fc915f;
+                border: 3px solid #fbe568;
+                border-radius: 20px;
+                cursor: pointer;
+                box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            }
+        }
+
+        /* MOZILLA */
+        &::-moz {
+            &-range-thumb {
+                /* Curseur qui se déplace le long de la piste pour Firefox */
+                background-color: #fdd803;
+                border: 5px solid #fc6c2a;
+                height: 15px;
+                width: 15px;
+                border-radius: 50%;
+                cursor: pointer;
+                box-shadow: 1px 1px 2px #000000, 0px 0px 2px #0d0d0d;
+            }
+
+            &-range-track {
+                /* La piste utilisée */
+                width: 100%;
+                height: 2px;
+                background-color: #fc915f;
+                border: 3px solid #fbe568;
+                border-radius: 20px;
+                cursor: pointer;
+                box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            }
+        }
+
+    }
+}
