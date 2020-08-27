@@ -1,5 +1,5 @@
 {
-  "name": "serveurnode",
+  "name": "ihm-server",
   "version": "1.0.0",
   "description": "serveur node pour communication avec arduino via le port serie",
   "main": "server.js",
@@ -8,7 +8,7 @@
     "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Eric Lanza",
   "license": "ISC",
   "dependencies": {
     "@popperjs/core": "^2.4.4",
