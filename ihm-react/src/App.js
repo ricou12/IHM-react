@@ -1,20 +1,49 @@
 import React, { useState, useEffect } from 'react';
+import socketIOClient from 'socket.io-client';
 import ConsoleModal from './components/ConsoleModal/ConsoleModal';
 import communicationImage from './assets/images/communication.png';
 import Terminal from './components/Terminal/Terminal';
 import MotorCommand from './components/MotorCommand/MotorCommand';
 import CameraCommand from './components/CameraCommand/CameraCommand';
 
+const ENDPOINT = '//:8080/';
+
 function App() {
   const [showConsoleModal, setShowConsoleModal] = useState(false);
-  const [showCommand, setShowCommand] = useState("cacher");
+  const [started, setStarted] = useState('');
+  const [showMotorCommand, setShowMotorCommand] = useState('hidden');
+  const [showCameraCommand, setShowCameraCommand] = useState('hidden');
 
-  // TODO useEffect pour basculer la classe cacher <> dérouler
+  const [messageFromServer, setMessageFromServer] = useState([]);
+
+  const [action, setAction] = useState('');
+
   useEffect(()=> {
-    // Appliquer la logique ici
+    const socket = socketIOClient(ENDPOINT);
+    socket.on('messageFromServer', message => {
+      setMessageFromServer((previousState) => ([...previousState, message]));
+    });
 
+    socket.emit('command', action);
+
+    // CLEAN UP THE EFFECT
+    return () => socket.disconnect();
   },[]);
-  
+
+  useEffect(()=> {
+    setStarted('started');
+  },[]);
+
+  // TODO useEffect pour basculer la classe hidden <> afficher
+  useEffect(() => {
+    setTimeout(()=>{
+      setShowMotorCommand('showAndZoom');
+      setTimeout(()=>{
+        setShowCameraCommand('showAndZoom');
+      }, 500);
+    }, 1000);
+  },[]);
+ 
   // Handle === Manipuler
   function handleShowConsoleModal() {
     setShowConsoleModal(true);
@@ -31,7 +60,7 @@ function App() {
     <div class="background bgColor--black-transparency"></div>
 
     <div className="container-fluid">
-      {/* Titre + console */}
+      {/* Titre + modal */}
       <div className="row">
         <div className="col-12">
           {/* Button trigger modal */}
@@ -45,16 +74,16 @@ function App() {
               handleCloseConsoleModal={handleCloseConsoleModal}
             />
           </div>
-        </div>
+        </div>       
       </div>
 
-      <div class="row no-gutters" id="myConsole">
+      <div className={`row no-gutters ${started}`} id="myConsole">
         {/* <!-- Terminal --> */}
-        <Terminal />
+        <Terminal started={started} messageFromServer={messageFromServer}/>
         {/* <!-- Commandes moteurs --> */}
-        <MotorCommand showCommand={showCommand} />
+        <MotorCommand showMotorCommand={showMotorCommand} setAction={setAction} />
         {/* <!-- Commandes caméra --> */}
-        <CameraCommand />
+        <CameraCommand showCameraCommand={showCameraCommand} />
       </div>
     </div>
   </>  

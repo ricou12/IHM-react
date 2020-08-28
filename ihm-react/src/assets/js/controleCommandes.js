@@ -126,16 +126,11 @@ const dataSerialPort = document.getElementById('dataSerialPort');
 let socket = io.connect('//:3000');
 
 // messages renvoyés par le serveur.
-socket.on('messageServer', function (message) {
+socket.on('messageFromServer', function (message) {
     dataServer.innerHTML += message + '<br>';
     dataServer.scrollTop = dataServer.scrollHeight;
 });
 
-// message envoyé par l'arduino au server node via le port serie.
-socket.on('sendSerialPort', function (message) {
-    dataSerialPort.innerHTML += message + '<br>';
-    dataSerialPort.scrollTop = dataSerialPort.scrollHeight;
-});
 
 /* ************************************************************************************
     ENVOIE DES COMMANDES AU SERVER "app.js" PUIS TRANSFERT A L4ARDUINO VIA PORT SERIE
@@ -205,15 +200,11 @@ document.onreadystatechange = function () {
         $("#myConsole").addClass('started');
         $("#rpiCam").addClass('started');
         setTimeout(function () {
-            $("#container__boxMoteur").removeClass("cacher");
-            $("#container__boxMoteur").addClass('derouler');
+            $("#container__boxMoteur").removeClass("hidden");
+            $("#container__boxMoteur").addClass('showAndZoom');
             setTimeout(function () {
-                $("#container__boxCamera").removeClass("cacher");
-                $("#container__boxCamera").addClass('derouler');
-                setTimeout(function () {
-                    $("#container__boxScanCam").removeClass("cacher");
-                    $("#container__boxScanCam").addClass('derouler');
-                }, 500);
+                $("#container__boxCamera").removeClass("hidden");
+                $("#container__boxCamera").addClass('showAndZoom');
             }, 500);
         }, 1000);
     }

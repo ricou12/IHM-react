@@ -205,14 +205,14 @@ document.onreadystatechange = function () {
         $("#myConsole").addClass('started');
         $("#rpiCam").addClass('started');
         setTimeout(function () {
-            $("#container__boxMoteur").removeClass("cacher");
-            $("#container__boxMoteur").addClass('derouler');
+            $("#container__boxMoteur").removeClass("hidden");
+            $("#container__boxMoteur").addClass('showAndZoom');
             setTimeout(function () {
-                $("#container__boxCamera").removeClass("cacher");
-                $("#container__boxCamera").addClass('derouler');
+                $("#container__boxCamera").removeClass("hidden");
+                $("#container__boxCamera").addClass('showAndZoom');
                 setTimeout(function () {
-                    $("#container__boxScanCam").removeClass("cacher");
-                    $("#container__boxScanCam").addClass('derouler');
+                    $("#container__boxScanCam").removeClass("hidden");
+                    $("#container__boxScanCam").addClass('showAndZoom');
                 }, 500);
             }, 500);
         }, 1000);

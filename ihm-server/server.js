@@ -3,8 +3,7 @@
 /* *******************************************************************
   INITIALISATION DES VARIABLES 
 ******************************************************************* */
-let Twig = require("twig"),
-    express = require('express'),
+let express = require('express'),
     SerialPort = require('serialport'),
     Readline = require('@serialport/parser-readline');
 
@@ -13,20 +12,7 @@ let Twig = require("twig"),
 ******************************************************************* */
 // https://www.npmjs.com/package/express || http://expressjs.com/
 let app = express();
-var port = 3000;
-
-// This section is optional and used to configure twig.
-app.set("twig options", {
-    allow_async: true, // Allow asynchronous compiling
-    strict_variables: false
-});
-
-
-// AJOUTE UN MIDDLEWARE (autorise le chargement de fichiers static)
-app.use(express.static('assets'));
-app.use(express.static('node_modules/jquery/dist'));
-app.use(express.static('node_modules/bootstrap/dist/js'));
-// app.use(express.static('node_modules/@popperjs/core/dist/cjs'));
+var port = 8080;
 
 // DESACTIVATION DU PROTOCOLE CORS
 app.use((req, res, next) => {
@@ -41,18 +27,7 @@ app.use((req, res, next) => {
 // ------- GESTION DES ROUTES ---------
 // Chargement de la page
 app.get('/', function (req, res) {
-    res.render('index.html.twig', {
-        title: "IHM-robotique"
-    });
-    console.log('Page chargée');
-});
-
-// DEFINIT L'ACTION A REALISER ET ENVOIE DE LA COMMANDE VIA LE PORT SERIE (WRITE)
-app.get('/:action', function (req, res) {
-    message = '';
-    let action = req.params.action || req.param('action');
-    arduinoSerialPort.write(action);
-    io.sockets.emit('messageServer', action);
+    res.json('Vous êtes bien connecté.');
 });
 
 const myserver = app.listen(port, function () {
@@ -71,13 +46,14 @@ io.sockets.on('connection', function (socket) {
     console.log('Un client est connecté !');
 
     // Quand un client se connecte, on envoie un message
-    socket.emit('messageServer', 'Vous êtes connecté au serveur !');
+    socket.emit('messageFromServer', 'Vous êtes connecté au serveur !');
+    socket.emit('messageFromServer', infoSerialPort);
 
     // On écoute les requetes du client et on envoie la commande à l'arduino
     socket.on('commande', function (action) {
         console.log('message du client : ' + action);
         arduinoSerialPort.write(action);
-        socket.emit('messageServer', action);
+        socket.emit('messageFromServer', action);
     });
 });
 
@@ -121,20 +97,17 @@ const parser = arduinoSerialPort.pipe(new Readline({
 arduinoSerialPort.on('open', function () {
     infoSerialPort = 'Le port serie ' + arduinoCOMPort + ' est ouvert.';
     console.log(infoSerialPort);
-    io.sockets.emit('sendSerialPort', infoSerialPort);
 });
 
 // ERREUR D'OUVERTURE DU PORT SERIE  
 arduinoSerialPort.on('error', function () {
     infoSerialPort = 'Erreur lors de l\'ouverture du port : ' + arduinoCOMPort + '.';
-    console.log(infoSerialPort);
-    io.sockets.emit('sendSerialPort', infoSerialPort);
 });
 
 // AFFICHE LES DONNEES RECU VIA LE PORT SERIE
 parser.on('data', data => {
     infoSerailPort = data;
-    console.log('Arduino émission de données : ', data);
-    io.sockets.emit('sendSerialPort', data);
+    console.log("Arduino émission de données :  " + data);
+    io.sockets.emit('messageFromServer', "Arduino émission de données :  " + data);
 });
 
