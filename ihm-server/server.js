@@ -40,6 +40,7 @@ const myserver = app.listen(port, function () {
 ******************************************************************* */
 // Chargement de socket.io
 let io = require('socket.io')(myserver);
+// let infoServer = "";
 
 io.sockets.on('connection', function (socket) {
     // Quand un client se connecte, on le note dans la console
@@ -47,6 +48,7 @@ io.sockets.on('connection', function (socket) {
 
     // Quand un client se connecte, on envoie un message
     socket.emit('messageFromServer', 'Vous êtes connecté au serveur !');
+    // Envoi l'état du port sérial au client
     socket.emit('messageFromServer', infoSerialPort);
 
     // On écoute les requetes du client et on envoie la commande à l'arduino
@@ -57,20 +59,22 @@ io.sockets.on('connection', function (socket) {
     });
 });
 
+/*
 // Remove the socket when it closes
-// io.sockets.on('close', function () {
-//     console.log('socket', socketId, 'closed');
-//     socket.emit('messageServer','Fermeture du server !');
-//     delete io.sockets[socketId];
-// });
+io.sockets.on('close', function () {
+    console.log('socket', socketId, 'closed');
+    socket.emit('messageFromServer','Fermeture du server !');
+    delete io.sockets[socketId];
+});
 
 // Close the server
-// myserver.close(function () { console.log('Server closed!'); });
-// // Destroy all open sockets
-// for (var socketId in io.sockets) {
-//   console.log('socket', socketId, 'destroyed');
-//   io.sockets[socketId].destroy();
-// }
+myserver.close(function () { console.log('Server closed!'); });
+// Destroy all open sockets
+for (var socketId in io.sockets) {
+  console.log('socket', socketId, 'destroyed');
+  io.sockets[socketId].destroy();
+}
+*/
 
 /* *******************************************************************
                             SERIAL PORT
@@ -88,6 +92,25 @@ let arduinoSerialPort = new SerialPort(arduinoCOMPort, {
     baudRate: 9600,
 });
 
+// LISTE + INFOS DES PORTS SERIES
+// SerialPort.list().then(
+//   ports => ports.forEach(console.log),
+//   err => console.error(err)
+// )
+
+// function listPorts() {
+    SerialPort.list().then(
+     ports => {
+      ports.forEach(port => {
+       console.log(`${port.comName} \t ${port.pnpId || ''} \t ${port.manufacturer || ''} \t ${port.locationId}`)
+      })
+     },
+     err => {
+      console.error('Error listing ports', err)
+     }
+    )
+//    }
+
 // PARAMETRAGE DES DONNEES RECUES VIA LE PORT SERIE (delimiter :Longueur de la chaine \n saut de ligne, \r retour chariot)  
 const parser = arduinoSerialPort.pipe(new Readline({
     delimiter: '\n',
@@ -103,6 +126,22 @@ arduinoSerialPort.on('open', function () {
 arduinoSerialPort.on('error', function () {
     infoSerialPort = 'Erreur lors de l\'ouverture du port : ' + arduinoCOMPort + '.';
 });
+
+// FERMETURE DU PORT SERIE  
+arduinoSerialPort.on('close', error => {
+    infoSerialPort = 'Le port serie ' + arduinoCOMPort + ' à été fermé : ';
+    console.log(infoSerialPort + error.message);
+    io.sockets.emit('messageFromServer',infoSerialPort + error.message);
+});
+
+/*
+// attend une séquence d'octets "prêts" avant d'émettre. 
+parser.on('ready', () => {
+    infoSerailPort = 'the ready byte sequence has been received';
+    console.log('the ready byte sequence has been received');
+    io.sockets.emit('messageFromServer', infoSerailPort);
+});
+*/
 
 // AFFICHE LES DONNEES RECU VIA LE PORT SERIE
 parser.on('data', data => {
