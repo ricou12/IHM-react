@@ -15,16 +15,22 @@ function App() {
   const [showCameraCommand, setShowCameraCommand] = useState('hidden');
 
   const [messageFromServer, setMessageFromServer] = useState([]);
+  const [messageFromSerial, setMessageFromSerial] = useState([]);
 
   const [action, setAction] = useState('');
 
   useEffect(()=> {
     const socket = socketIOClient(ENDPOINT);
+
     socket.on('messageFromServer', message => {
       setMessageFromServer((previousState) => ([...previousState, message]));
     });
 
-    socket.emit('command', action);
+    socket.on('messageFromSerial', message => {
+
+    });
+
+    socket.emit('messageFromSerial', "getSerialPort");
 
     // CLEAN UP THE EFFECT
     return () => socket.disconnect();
