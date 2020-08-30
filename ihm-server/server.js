@@ -56,22 +56,22 @@ io.sockets.on('connection', function (socket) {
     // on le note dans la console
     console.log('Un client est connecté !');
 
-    // On l'informe qu'il est connecté
+    //  On informe le client qu'il est connecté
     socket.emit('messageFromServer', 'Vous êtes connecté au serveur !');
 
     // Envoi l'état du port sérial au client
     socket.emit('messageFromServer', MessageOfSerialPort);
 
     // Attends la liste des ports séries
-    async () => {
-        mylistPorts = await listPorts();
-        if (mylistPorts.state) {
-            console.log('async')
-            mylistPorts.infoSerialPort.forEach(port => {
-                socket.emit('messageFromServer', 'Liste des ports séries : ' + port.path);
-            })
-        }
-    }
+    // async () => {
+    //     mylistPorts = await listPorts();
+    //     if (mylistPorts.state) {
+    //         console.log('async')
+    //         mylistPorts.infoSerialPort.forEach(port => {
+    //             socket.emit('messageFromServer', 'Liste des ports séries : ' + port.path);
+    //         })
+    //     }
+    // }
 
     // On écoute les requetes du client et on envoie la commande à l'arduino
     socket.on('commande', function (action) {
@@ -129,6 +129,7 @@ for (var socketId in io.sockets) {
 
 // let PortCOM =[];
 // let listSerialPort = [];
+let serialPortForArduino;
 let MessageOfSerialPort;
 let infoSerialPort=[];
 let IdForTempo = false;
@@ -167,7 +168,7 @@ let ConnectSerialPort = (PortCOM) => {
     // todo envoyer la liste des ports serie pour la connection
 
     // INITIALISE LA COMMUNICATION 
-    let serialPortForArduino = new SerialPort(PortCOM, {
+    serialPortForArduino = new SerialPort(PortCOM, {
         baudRate: 9600,
     });
 
