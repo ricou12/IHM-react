@@ -15,25 +15,25 @@ export default function CameraCommand({showCameraCommand}) {
             </div>
             <div className="grid-containerCamera">
                 <div className="camera-avt">
-                    <img src={ImageAvancer} alt="" data-id="camera_Haut" class="icon" />
+                    <img src={ImageAvancer} alt="" data-id="camera_Haut" className="icon" />
                 </div>
                 <div className="camera-centre">
-                    <img src={ImageCentrer} alt="" data-id="camera_Centre" class="icon" />
+                    <img src={ImageCentrer} alt="" data-id="camera_Centre" className="icon" />
                 </div>
                 <div className="camera-gauche">
-                    <img src={ImageGauche} alt="" data-id="camera_Gauche" class="icon" />
+                    <img src={ImageGauche} alt="" data-id="camera_Gauche" className="icon" />
                 </div>
                 <div className="camera-droite">
-                    <img src={ImageDroite} alt="" data-id="camera_Droite" class="icon" />
+                    <img src={ImageDroite} alt="" data-id="camera_Droite" className="icon" />
                 </div>
                 <div className="camera-arr">
-                    <img src={ImageReculer} alt="" data-id="camera_Bas" class="icon" />
+                    <img src={ImageReculer} alt="" data-id="camera_Bas" className="icon" />
                 </div>
                 <div className="camera-scanGauche">
-                    <img src={ImageScanX} alt="" data-id="camera_Scan-X" class="icon" />
+                    <img src={ImageScanX} alt="" data-id="camera_Scan-X" className="icon" />
                 </div>
                 <div className="camera-scanDroite">
-                    <img src={ImageScanY} alt="" data-id="camera_Scan-Y" class="icon" />
+                    <img src={ImageScanY} alt="" data-id="camera_Scan-Y" className="icon" />
                 </div>
             </div>
             <div className="boxTitleBas">

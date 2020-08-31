@@ -60,13 +60,17 @@ io.sockets.on('connection', function (socket) {
     socket.emit('messageFromServer', 'Vous êtes connecté au serveur !');
 
     // Envoi l'état du port sérial au client
+    console.log(MessageOfSerialPort);
     socket.emit('messageFromServer', MessageOfSerialPort);
 
     // On écoute les requetes du client et on envoie la commande à l'arduino
     socket.on('commande', function (action) {
-        console.log('message du client : ' + action);
-        ConnectSerialPort.write(action);
-        socket.emit('messageFromServer', action);
+        serialPortForArduino.write(action);
+    });
+
+    // On écoute les requetes du client et on envoie la commande à l'arduino
+    socket.on('messageFromClient', function (message) {
+        console.log('message du client : ' + message);
     });
 });
 
@@ -108,7 +112,7 @@ function listPorts() {
         ports => {
             if (ports.length > 0) {
                 let PortCOM = "";
-                // console.log("Liste des ports séries: ", ports);
+                console.log("Liste des ports séries: ", ports);
                 console.log("Détection de l'arduino !");
                 // MessageOfSerialPort = "Auto-détection de l'arduino !";
                 io.sockets.emit('messageFromServer', "Auto-détection de l'arduino !");
@@ -134,7 +138,8 @@ function listPorts() {
                 }
             } else {
                 console.log('Aucun port série disponible ou non spécifié.');
-                MessageOfSerialPort =  'Aucun port série disponible ou non spécifié.'
+                // MessageOfSerialPort =  'Aucun port série disponible ou non spécifié.';
+                io.sockets.emit('messageFromServer', MessageOfSerialPort);
                 detectSerialPort();
                 return {
                     'state': false,
