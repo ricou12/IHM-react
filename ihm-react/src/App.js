@@ -18,6 +18,7 @@ function App() {
   const [started, setStarted] = useState('');
   const [showMotorCommand, setShowMotorCommand] = useState('hidden');
   const [showCameraCommand, setShowCameraCommand] = useState('hidden');
+
   // WEB SOKET
   const [messageFromServer, setMessageFromServer] = useState([]);
 
@@ -26,12 +27,19 @@ function App() {
   const [actionServoMoteurs, setActionServoMoteurs] = useState('');
   const [speed, setSpeed] = useState(175);
 
+  // Evenements au chargement de l'interface
+  useEffect(()=> {
+    setStarted('started');
+  },[]);
+
+  // Events commands motor
   useEffect(() => {
     if (actionMoteurs !== '') {
       socket.emit('commande', `${actionMoteurs};${speed}\n`);
     }
   }, [actionMoteurs,speed])
 
+  // Events commands Servo Motor
   useEffect(() => {
     if (actionServoMoteurs !== '') {
       socket.emit('commande', `${actionServoMoteurs};\n`);
@@ -48,10 +56,7 @@ function App() {
   }, []); //only re-run the effect if new message comes in
 
 
-  // Effets au chargement de l'interface
-  useEffect(()=> {
-    setStarted('started');
-  },[]);
+
 
 
   // TODO useEffect pour basculer la classe hidden <> afficher
@@ -66,13 +71,9 @@ function App() {
  
 
   // MODAL DE BOOTSTRAP (Handle === Manipuler)
-  function handleShowConsoleModal() {
-    setShowConsoleModal(true);
-  };
+  const handleShowConsoleModal = () => setShowConsoleModal(true);
   // MODAL DE BOOTSTRAP
-  function handleCloseConsoleModal() {
-    setShowConsoleModal(false);
-  };
+  const handleCloseConsoleModal = () => setShowConsoleModal(false);
  
   return (
     <>

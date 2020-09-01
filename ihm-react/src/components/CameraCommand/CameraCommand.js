@@ -9,9 +9,7 @@ import ImageScanY from './../../assets/images/scanY.png';
 
 export default function CameraCommand({ showCameraCommand, setActionServoMoteurs }) {
 
-    const handleOnButtonClick =(actionType) => {
-        setActionServoMoteurs(actionType);
-    }
+    const handleOnButtonClick = actionType => setActionServoMoteurs(actionType);
 
     return (
         <div className={`col-6 order-3 col-xl-3 order-xl-3 d-flex flex-column align-items-center mt-2 ${showCameraCommand}`} id="container__boxCamera">

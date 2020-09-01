@@ -13,14 +13,11 @@ import ImageBasDroite from './../../assets/images/basDroite.png';
 
 export default function MotorCommand({ showMotorCommand,setToogleAction,setActionMoteurs,setSpeed }) {
 
-    function handleOnSliderValueChange(value) {
-        setSpeed(value);
-    }
+    // Speed motors
+    const handleOnSliderValueChange = value => setSpeed(value);
     
-    // Commandes moteurs
-    function handleOnActionButtonClick(actionType) {
-        setActionMoteurs(actionType);
-    }
+    // Commands motors
+    const handleOnActionButtonClick = actionType => setActionMoteurs(actionType);
     
     return (
         <div className={`col-6 order-2 col-xl-3 order-xl-1 d-flex flex-column align-items-center mt-2 ${showMotorCommand}`} id="container__boxMoteur">
