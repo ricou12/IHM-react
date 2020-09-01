@@ -54,7 +54,7 @@ let io = require('socket.io')(myserver);
 io.sockets.on('connection', function (socket) {
     // QUAND UN CLIENT SE CONNECTE
     // on le note dans la console
-    console.log('Un client est connecté !');
+    console.log(`Un client est connecté avec id: ${socket.id} !`);
 
     //  On informe le client qu'il est connecté
     socket.emit('messageFromServer', 'Vous êtes connecté au serveur !');
@@ -72,6 +72,8 @@ io.sockets.on('connection', function (socket) {
     socket.on('messageFromClient', function (message) {
         console.log('message du client : ' + message);
     });
+
+    socket.on('disconnect', () => console.log(`${socket.id} DISCONNECTED.`));
 });
 
 /*

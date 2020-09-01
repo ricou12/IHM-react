@@ -5,26 +5,25 @@ import ImageHautDroite from './../../assets/images/hautDroite.png';
 import ImageCentrer from './../../assets/images/centrer.png';
 import ImageGauche from './../../assets/images/gauche.png';
 import ImageDroite from './../../assets/images/droite.png';
-import ImageReculer from './../../assets/images/reculer.png'; 
+import ImageReculer from './../../assets/images/reculer.png';  
 import ImageBasGauche from './../../assets/images/basGauche.png';
 import ImageBasDroite from './../../assets/images/basDroite.png';
 
-import { imagesData } from './../../helpers/imagesData';
+// import { imagesData } from './../../helpers/imagesData';
 
-export default function MotorCommand({ showMotorCommand, handleCommandData, handleOnSpeedChange, handleOnActionButtonClick }) {
+export default function MotorCommand({ showMotorCommand, handleCommandData }) {
     const [hoverImage,setHoverImage] = useState('');
     const [action, setAction] = useState('');
     const [speed, setSpeed] = useState(175);
 
     useEffect(()=> {
         if (action !== '') {
-            handleCommandData(`${action};${speed}/n`);
+            handleCommandData(`${action};${speed}\n`);
         }
-    }, [action, speed])
+    }, [action, speed]);
 
-    function handleOnSliderValueChange(event) {
-        setSpeed(event.target.value);
-        console.log('MotorCommand.js : ', speed);
+    function handleOnSliderValueChange(value) {
+        setSpeed(value);
     }
     
     // Commandes moteurs
@@ -80,8 +79,8 @@ export default function MotorCommand({ showMotorCommand, handleCommandData, hand
                             min="105" 
                             max="255" 
                             step="10" 
-                            value={speed}
-                            onChange={event=>handleOnSpeedChange(event.target.value)}
+                            defaultValue={175}
+                            onChange={event=>handleOnSliderValueChange(event.target.value)}
                         />
                     </div>
                 </div>

@@ -10,7 +10,7 @@ export default function Terminal({started, messageFromServer}) {
     return (
         <div className="col-12 order-1 col-xl-6 order-xl-2 d-flex flex-column pr-1 pr-md-0">
             <div className="commande-camera d-flex">
-                {/* <iframe id="rpiCam" src="http://10.3.141.1/RpiCam/min.php" allow="fullscreen" class={started}></iframe> */}
+                <iframe id="rpiCam" src="http://10.3.141.1/RpiCam/min.php" allow="fullscreen" class={started}></iframe>
             </div>
             
             <div className="infoConsole infoConsole__bas--height">

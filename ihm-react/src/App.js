@@ -1,64 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import socketIOClient from 'socket.io-client';
 import ConsoleModal from './components/ConsoleModal/ConsoleModal';
 import communicationImage from './assets/images/communication.png';
 import Terminal from './components/Terminal/Terminal';
 import MotorCommand from './components/MotorCommand/MotorCommand';
 import CameraCommand from './components/CameraCommand/CameraCommand';
 
+import io from 'socket.io-client';
 // Port de communication HTTP via les sockets
-const ENDPOINT = '//:8080/';
+const socket = io('//:8080');
 
 function App() {
-  let socket;
-   const [showConsoleModal, setShowConsoleModal] = useState(false);
-  const [started, setStarted] = useState('');
+  // SHOW MODAL WHEN CLICK ON TITLE
+  const [showConsoleModal, setShowConsoleModal] = useState(false);
   // ANIMATION
+  const [started, setStarted] = useState('');
   const [showMotorCommand, setShowMotorCommand] = useState('hidden');
   const [showCameraCommand, setShowCameraCommand] = useState('hidden');
   // WEB SOKET
-  const [initialized, setInitialized] = useState(false);
   const [messageFromServer, setMessageFromServer] = useState([]);
   const [messageFromSerial, setMessageFromSerial] = useState([]);
   // Commandes moteurs et servo moteurs : 'action' ';' + 'vitesse' + '\n'
-  const [action, setAction] = useState('');
-  const [speed, setSpeed] = useState(175);
 
   useEffect(() => {
-    socket = socketIOClient(ENDPOINT);
-    socket.on('messageFromServer', message => {
-        setMessageFromServer((previousState) => ([...previousState, message]));
-    });
-
-    return () => socket.disconnect();
-  },[]);
-  
-  useEffect(()=> {
-    if (action !== '') {
-      handleCommandData(`${action};${speed}/n`);
-    }
-  }, [action, speed]);
-
-  function handleOnSpeedChange(value) {
-    setSpeed(value);
-  }
-
-  // Commandes moteurs
-  function handleOnActionButtonClick(actionType) {
-    setAction(actionType);
-  }
-      
-  const handleCommandData = (command) => {
-    // socket.emit('commande', `${action};${speed}\n`);
-    // camera: `${action};''\n`
-    socket.emit('commande', command);
-  }
-
-  const createSocketConnection = () => {
     socket.on('messageFromServer', message => {
       setMessageFromServer((previousState) => ([...previousState, message]));
     });
-    setInitialized(true);
+  }, []); //only re-run the effect if new message comes in
+  
+  // Envoie la commande au serveur
+  const handleCommandData = (command) => {
+    socket.emit('commande', command);
   }
 
   useEffect(()=> {
@@ -118,11 +89,12 @@ function App() {
         <MotorCommand 
           showMotorCommand={showMotorCommand}  
           handleCommandData={handleCommandData}
-          handleOnSpeedChange={handleOnSpeedChange}
-          handleOnActionButtonClick={handleOnActionButtonClick}
         />
         {/* <!-- Commandes caméra --> */}
-        <CameraCommand showCameraCommand={showCameraCommand} />
+        <CameraCommand 
+          showCameraCommand={showCameraCommand} 
+          handleCommandData={handleCommandData}
+        />
       </div>
     </div>
   </>  
