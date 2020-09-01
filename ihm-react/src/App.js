@@ -10,31 +10,49 @@ import io from 'socket.io-client';
 const socket = io('//:8080');
 
 function App() {
+
   // SHOW MODAL WHEN CLICK ON TITLE
   const [showConsoleModal, setShowConsoleModal] = useState(false);
+
   // ANIMATION
   const [started, setStarted] = useState('');
   const [showMotorCommand, setShowMotorCommand] = useState('hidden');
   const [showCameraCommand, setShowCameraCommand] = useState('hidden');
   // WEB SOKET
   const [messageFromServer, setMessageFromServer] = useState([]);
-  const [messageFromSerial, setMessageFromSerial] = useState([]);
-  // Commandes moteurs et servo moteurs : 'action' ';' + 'vitesse' + '\n'
+
+  // COMMANDES MOTEURS : 'action' ';' + 'vitesse' + '\n'
+  const [actionMoteurs, setActionMoteurs] = useState('');
+  const [actionServoMoteurs, setActionServoMoteurs] = useState('');
+  const [speed, setSpeed] = useState(175);
+
+  useEffect(() => {
+    if (actionMoteurs !== '') {
+      socket.emit('commande', `${actionMoteurs};${speed}\n`);
+    }
+  }, [actionMoteurs,speed])
+
+  useEffect(() => {
+    if (actionServoMoteurs !== '') {
+      socket.emit('commande', `${actionServoMoteurs};\n`);
+    }
+    return () => {
+      setActionServoMoteurs('');
+    }
+  }, [actionServoMoteurs])
 
   useEffect(() => {
     socket.on('messageFromServer', message => {
       setMessageFromServer((previousState) => ([...previousState, message]));
     });
   }, []); //only re-run the effect if new message comes in
-  
-  // Envoie la commande au serveur
-  const handleCommandData = (command) => {
-    socket.emit('commande', command);
-  }
 
+
+  // Effets au chargement de l'interface
   useEffect(()=> {
     setStarted('started');
   },[]);
+
 
   // TODO useEffect pour basculer la classe hidden <> afficher
   useEffect(() => {
@@ -46,11 +64,12 @@ function App() {
     }, 1000);
   },[]);
  
-  // Handle === Manipuler
+
+  // MODAL DE BOOTSTRAP (Handle === Manipuler)
   function handleShowConsoleModal() {
     setShowConsoleModal(true);
   };
-
+  // MODAL DE BOOTSTRAP
   function handleCloseConsoleModal() {
     setShowConsoleModal(false);
   };
@@ -87,13 +106,15 @@ function App() {
           />
         {/* <!-- Commandes moteurs --> */}
         <MotorCommand 
-          showMotorCommand={showMotorCommand}  
-          handleCommandData={handleCommandData}
+          showMotorCommand={showMotorCommand} 
+          setActionMoteurs={setActionMoteurs}
+          setSpeed={setSpeed}
+          
         />
         {/* <!-- Commandes caméra --> */}
         <CameraCommand 
           showCameraCommand={showCameraCommand} 
-          handleCommandData={handleCommandData}
+          setActionServoMoteurs={setActionServoMoteurs}
         />
       </div>
     </div>

@@ -11,16 +11,7 @@ import ImageBasDroite from './../../assets/images/basDroite.png';
 
 // import { imagesData } from './../../helpers/imagesData';
 
-export default function MotorCommand({ showMotorCommand, handleCommandData }) {
-    const [hoverImage,setHoverImage] = useState('');
-    const [action, setAction] = useState('');
-    const [speed, setSpeed] = useState(175);
-
-    useEffect(()=> {
-        if (action !== '') {
-            handleCommandData(`${action};${speed}\n`);
-        }
-    }, [action, speed]);
+export default function MotorCommand({ showMotorCommand,setToogleAction,setActionMoteurs,setSpeed }) {
 
     function handleOnSliderValueChange(value) {
         setSpeed(value);
@@ -28,12 +19,7 @@ export default function MotorCommand({ showMotorCommand, handleCommandData }) {
     
     // Commandes moteurs
     function handleOnActionButtonClick(actionType) {
-        setAction(actionType);
-    }
-    
-    function handleOnImageMouse(event) {
-        setHoverImage(event.target.value);
-        console.log('change image : ', hoverImage);
+        setActionMoteurs(actionType);
     }
     
     return (
